@@ -19,18 +19,19 @@ public class GoldCoin {
         this.Taken = taken;
     }
 
-    public int getCoinY(){
+    public int getCoinY() {
         return this.y;
     }
 
-    public int getCoinX(){
+    public int getCoinX() {
         return this.x;
     }
 
-    public void setCoin(int x, int y){
+    public void setCoin(int x, int y) {
         this.y = y;
         this.x = x;
     }
+
     public GoldCoin(int x, int y) {
         this.x = x;
         this.y = y;

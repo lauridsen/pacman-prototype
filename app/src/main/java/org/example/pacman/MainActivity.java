@@ -36,12 +36,12 @@ public class MainActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
-        gameView =  findViewById(R.id.gameView);
+        gameView = findViewById(R.id.gameView);
         TextView textViewPoints = findViewById(R.id.points);
         TextView textViewTime = findViewById(R.id.time);
 
 
-        game = new Game(this,textViewPoints, textViewTime);
+        game = new Game(this, textViewPoints, textViewTime);
         game.setGameView(gameView);
         gameView.setGame(game);
 
@@ -109,9 +109,7 @@ public class MainActivity extends Activity {
     }
 
 
-
-    private void TimerMethod()
-    {
+    private void TimerMethod() {
         //This method is called directly by the timer
         //and runs in the same thread as the timer.
 
@@ -129,22 +127,21 @@ public class MainActivity extends Activity {
 
             //This method runs in the same thread as the UI.
             // so we can draw
-            if (game.running)
-            {
+            if (game.running) {
                 counter++;
                 //update the counter - notice this is NOT seconds in this example
                 //you need TWO counters - one for the time and one for the pacman
                 //textView.setText("Timer value: "+counter);
-                 //move the pacman - you
+                //move the pacman - you
                 //should call a method on your game class to move
                 //the pacman instead of this
-                if(game.direction == 1) {
+                if (game.direction == 1) {
                     game.movePacmanUp(4);
-                } else if(game.direction == 2) {
+                } else if (game.direction == 2) {
                     game.movePacmanRight(4);
-                } else if(game.direction == 3) {
+                } else if (game.direction == 3) {
                     game.movePacmanDown(4);
-                } else if(game.direction == 4) {
+                } else if (game.direction == 4) {
                     game.movePacmanLeft(4);
                 }
             }
@@ -154,11 +151,11 @@ public class MainActivity extends Activity {
 
     private Runnable LevelTimer_Tick = new Runnable() {
         public void run() {
-            if(game.running) {
+            if (game.running) {
                 game.levelTime--;
                 game.setTimerText();
             }
-            if(game.gameOver) {
+            if (game.gameOver) {
                 reset();
             }
         }
@@ -177,11 +174,8 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Toast.makeText(this,"settings clicked",Toast.LENGTH_LONG).show();
-            return true;
-        } else if (id == R.id.action_newGame) {
-            Toast.makeText(this,"Game has been reset",Toast.LENGTH_LONG).show();
+        if (id == R.id.action_newGame) {
+            Toast.makeText(this, "Game has been reset", Toast.LENGTH_LONG).show();
             reset();
             return true;
         } else if (id == R.id.action_pause) {
