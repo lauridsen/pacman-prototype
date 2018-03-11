@@ -7,11 +7,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- *
  * This class should contain all your game logic
  */
 
@@ -20,7 +18,10 @@ public class Game {
     private Context context;
     private int points = 0; //how points do we have
     //bitmap of the pacman
-    private Bitmap pacBitmap;
+    private Bitmap pacBitmapRight;
+    private Bitmap pacBitmapDown;
+    private Bitmap pacBitmapLeft;
+    private Bitmap pacBitmapUp;
     //textview reference to points
     private TextView pointsView;
     private TextView timerView;
@@ -32,7 +33,7 @@ public class Game {
 
     //a reference to the gameview
     private GameView gameView;
-    private int h,w; //height and width of screen
+    private int h, w; //height and width of screen
 
     private boolean coinsInitialized = false;
     private boolean enemiesInitialized = false;
@@ -43,26 +44,32 @@ public class Game {
     public int direction = 0;
     public int levelTime = 60;
 
-    public Game(Context context, TextView view, TextView textViewTime)
-    {
+
+    public Game(Context context, TextView view, TextView textViewTime) {
         this.context = context;
         this.pointsView = view;
         this.timerView = textViewTime;
-        pacBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacman);
+        pacBitmapRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacmanright);
+        pacBitmapDown = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacmandown);
+        pacBitmapLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacmanleft);
+        pacBitmapUp = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacmanup);
+
     }
 
-    public void setGameView(GameView view)
-    {
+    public void setGameView(GameView view) {
         this.gameView = view;
     }
 
     public boolean getCoinsInitialized() {
         return coinsInitialized;
     }
-    public boolean getEnemiesInitialized() { return enemiesInitialized; }
+
+    public boolean getEnemiesInitialized() {
+        return enemiesInitialized;
+    }
 
     public void initCoins() {
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             int xRandom = (int) Math.floor(Math.random() * w);
             int yRandom = (int) Math.floor(Math.random() * h);
             coins.add(new GoldCoin(xRandom, yRandom));
@@ -71,7 +78,7 @@ public class Game {
     }
 
     public void initEnemies() {
-        for(int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++) {
             int xRandom = (int) Math.floor(Math.random() * w);
             int yRandom = (int) Math.floor(Math.random() * h);
             enemies.add(new Enemy(xRandom, yRandom));
@@ -79,9 +86,8 @@ public class Game {
         enemiesInitialized = true;
     }
 
-    //New game
-    public void newGame()
-    {
+    // New game
+    public void newGame() {
         pacx = 50;
         pacy = 400; //just some starting coordinates
         //reset the points
@@ -91,88 +97,85 @@ public class Game {
         gameView.invalidate(); //redraw screen
     }
 
-    public void setSize(int h, int w)
-    {
+    public void setSize(int h, int w) {
         this.h = h;
         this.w = w;
     }
 
-    public void movePacmanRight(int pixels)
-    {
+    public void movePacmanRight(int pixels) {
         //still within our boundaries?
         doCollisionCheck();
-        if (pacx+pixels+pacBitmap.getWidth()<w) {
+        if (pacx + pixels + pacBitmapRight.getWidth() < w) {
             pacx = pacx + pixels;
             gameView.invalidate();
         }
     }
 
-    public void movePacmanLeft(int pixels)
-    {
+    public void movePacmanLeft(int pixels) {
         //still within our boundaries?
         doCollisionCheck();
-        if (pacx-pixels+pacBitmap.getWidth() <w && pacx > 0) {
+        if (pacx - pixels + pacBitmapRight.getWidth() < w && pacx > 0) {
             pacx = pacx - pixels;
             gameView.invalidate();
         }
     }
 
-    public void movePacmanUp(int pixels)
-    {
+    public void movePacmanUp(int pixels) {
         //still within our boundaries?
         doCollisionCheck();
-        if (pacy-pixels+pacBitmap.getHeight()>0 && pacy > 0) {
+        if (pacy - pixels + pacBitmapRight.getHeight() > 0 && pacy > 0) {
             pacy = pacy - pixels;
             gameView.invalidate();
         }
     }
 
-    public void movePacmanDown(int pixels)
-    {
+    public void movePacmanDown(int pixels) {
         //still within our boundaries?
         doCollisionCheck();
-        if (pacy+pixels+pacBitmap.getHeight() < h) {
+        if (pacy + pixels + pacBitmapRight.getHeight() < h) {
             pacy = pacy + pixels;
             gameView.invalidate();
         }
     }
 
 
-
-    //TODO check if the pacman touches a gold coin
+    //Check if the pacman touches a gold coin
     //and if yes, then update the neccesseary data
-    //for the gold coins and the points
-    //so you need to go through the arraylist of goldcoins and
-    //check each of them for a collision with the pacman
-    public void doCollisionCheck()
-    {
-        int radius = 40;
-        int middlePacX = pacx + getPacBitmap().getWidth() / 2;
-        int middlePacY = pacy + getPacBitmap().getHeight() / 2;
-        for(GoldCoin coin : getCoins()) {
+    public void doCollisionCheck() {
+        int pacRadius = 80;
+        int enemyRadius = 40;
+        int middlePacX = pacx + getPacBitmapRight().getWidth() / 2;
+        int middlePacY = pacy + getPacBitmapRight().getHeight() / 2;
+        // check if gold coin is hit
+        for (GoldCoin coin : getCoins()) {
             int a = Math.abs(middlePacX - coin.getCoinX());
             int b = Math.abs(middlePacY - coin.getCoinY());
-            if (Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) < radius && !coin.isTaken()) {
+            if (Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) < pacRadius && !coin.isTaken()) {
+                // 1. set coin to taken
                 coin.setTaken(true);
+                // 2. update points
                 points++;
+                // 3. refresh view
                 gameView.invalidate();
+                // update point text
                 setPointText();
-                setTimerText();
-                for(Enemy enemy : getEnemies()) {
-                    if(getPoints() == 3) {
+                // set speed of enemy depending on points taken
+                for (Enemy enemy : getEnemies()) {
+                    if (getPoints() == 3) {
                         enemy.setSpeed(2);
-                    } else if (getPoints() == 6 ) {
+                    } else if (getPoints() == 6) {
                         enemy.setSpeed(3);
                     }
                 }
             }
         }
-        for(Enemy enemy : getEnemies()) {
+        // Check if enemy is hit
+        for (Enemy enemy : getEnemies()) {
             enemy.goToPacMan(middlePacX, middlePacY);
             gameView.invalidate();
             int a = Math.abs(middlePacX - enemy.getEnemyX());
             int b = Math.abs(middlePacY - enemy.getEnemyY());
-            if (Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) < radius) {
+            if (Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) < enemyRadius) {
                 running = false;
                 gameOver = true;
                 Toast toast = Toast.makeText(context.getApplicationContext(), "Du tabte", Toast.LENGTH_SHORT);
@@ -181,51 +184,62 @@ public class Game {
         }
     }
 
-    public int getPacx()
-    {
+    public int getPacx() {
         return pacx;
     }
 
-    public int getPacy()
-    {
+    public int getPacy() {
         return pacy;
     }
 
-    public int getPoints()
-    {
+    public int getPoints() {
         return points;
+    }
+
+    public int getDirection() {
+        return direction;
     }
 
     public void resetPoints() {
         this.points = 0;
     }
 
-    public ArrayList<GoldCoin> getCoins()
-    {
+    public ArrayList<GoldCoin> getCoins() {
         return coins;
     }
 
-    public ArrayList<Enemy> getEnemies()
-    {
+    public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
-
-    public Bitmap getPacBitmap()
-    {
-        return pacBitmap;
+    public Bitmap getPacBitmapRight() {
+        return pacBitmapRight;
     }
 
+    public Bitmap getPacBitmapDown() {
+        return pacBitmapDown;
+    }
+
+    public Bitmap getPacBitmapLeft() {
+        return pacBitmapLeft;
+    }
+
+    public Bitmap getPacBitmapUp() {
+        return pacBitmapUp;
+    }
+
+
     public void setPointText() {
-        pointsView.setText(context.getResources().getString(R.string.points)+" "+points);
-        if(points == 10) {
+        pointsView.setText(context.getResources().getString(R.string.points) + " " + points);
+        if (points == 10) {
             Toast toast = Toast.makeText(context.getApplicationContext(), "Du vandt", Toast.LENGTH_SHORT);
             toast.show();
             running = false;
         }
     }
+
     public void setTimerText() {
-        timerView.setText(context.getResources().getString(R.string.time)+" "+ levelTime);
+        timerView.setText(context.getResources().getString(R.string.time) + " " + levelTime);
         if (levelTime == 0) {
             direction = 0;
             running = false;
