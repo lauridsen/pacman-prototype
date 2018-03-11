@@ -45,6 +45,10 @@ public class Enemy {
         return this.speed;
     }
 
+    public void setMaxSpeed(int newMaxSpeed) {
+        this.maxSpeed = newMaxSpeed;
+    }
+
     public Enemy(int x, int y) {
         this.x = x;
         this.y = y;
