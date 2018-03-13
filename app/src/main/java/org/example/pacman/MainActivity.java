@@ -75,8 +75,10 @@ public class MainActivity extends Activity {
         buttonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if( !game.gameWon) {
                 game.direction = 2;
                 game.running = true;
+            }
             }
         });
 
@@ -84,8 +86,10 @@ public class MainActivity extends Activity {
         buttonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if( !game.gameWon) {
                 game.direction = 4;
                 game.running = true;
+            }
             }
         });
 
@@ -93,8 +97,10 @@ public class MainActivity extends Activity {
         buttonUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if( !game.gameWon) {
                 game.direction = 1;
                 game.running = true;
+            }
             }
         });
 
@@ -102,8 +108,10 @@ public class MainActivity extends Activity {
         buttonDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if( !game.gameWon) {
                 game.direction = 3;
                 game.running = true;
+            }
             }
         });
     }
