@@ -38,9 +38,13 @@ public class Game {
     private boolean coinsInitialized = false;
     private boolean enemiesInitialized = false;
 
+    //Set max coins and winning score
+    private int maxCoins = 10;
+
     // Timer
     public boolean running = false;
     public boolean gameOver = false;
+    public boolean gameWon = false;
     public int direction = 0;
     public int levelTime = 60;
 
@@ -69,7 +73,7 @@ public class Game {
     }
 
     public void initCoins() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < maxCoins; i++) {
             int xRandom = (int) Math.floor(Math.random() * w);
             int yRandom = (int) Math.floor(Math.random() * h);
             coins.add(new GoldCoin(xRandom, yRandom));
@@ -89,7 +93,7 @@ public class Game {
     // New game
     public void newGame() {
         pacx = 50;
-        pacy = 400; //just some starting coordinates
+        pacy = 250; //just some starting coordinates
         //reset the points
         points = 0;
         setPointText();
@@ -161,10 +165,10 @@ public class Game {
                 setPointText();
                 // set speed of enemy depending on points taken
                 for (Enemy enemy : getEnemies()) {
-                    if (getPoints() == 3) {
-                        enemy.setSpeed(2);
-                    } else if (getPoints() == 6) {
+                    if (getPoints() > maxCoins / 1.5 ) {
                         enemy.setSpeed(3);
+                    } else if (getPoints() > maxCoins / 3) {
+                        enemy.setSpeed(2);
                     }
                 }
             }
@@ -231,10 +235,12 @@ public class Game {
 
     public void setPointText() {
         pointsView.setText(context.getResources().getString(R.string.points) + " " + points);
-        if (points == 10) {
+        //check if we've won
+        if (points == maxCoins) {
             Toast toast = Toast.makeText(context.getApplicationContext(), "Du vandt", Toast.LENGTH_SHORT);
             toast.show();
             running = false;
+            gameWon = true;
         }
     }
 
